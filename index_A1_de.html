@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daten senden</title>
+</head>
+
+<body>
+    <style>
+        .container {
+            width: 80%;
+            margin-left: 10%;
+        }
+
+        .title {
+            font-size: 40px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 700;
+            margin: 0;
+            text-align: center;
+            padding-bottom: 30px;
+        }
+
+        .description {
+            font-size: 16px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 400;
+            margin: 10px 0px;
+            text-align: center;
+            color: #8C849A;
+        }
+
+        .dataForm {
+            display: flex;
+            flex-direction: column;
+            row-gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full_name {
+            font-size: 16px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 700;
+            margin: 10px 0px;
+            color: black;
+        }
+
+        .form-control {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #E7E5EA;
+            outline: none;
+            border-radius: 12px;
+        }
+
+        .btn {
+            padding: 30px 0;
+            background: #96C643;
+            border: none;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .btn2 {
+            background: white;
+            padding: 12px 50px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            margin: auto;
+        }
+
+        .tooltip12 {
+            position: absolute;
+            font-family: 'Gilroy', Arial, sans-serif;
+            background-color: rgb(219, 215, 215);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            display: none;
+            z-index: 999999;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip12 .tooltip12text {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip12:hover .tooltip12text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 850px) {
+            .title {
+                font-size: 35px;
+            }
+
+            .btn {
+                padding: 20px 0;
+                border-radius: 10px;
+            }
+
+            .btn2 {
+                padding: 10px 45px;
+                border-radius: 10px;
+                font-size: 15px;
+            }
+
+            .form-control {
+                border-radius: 10px;
+            }
+
+            .tooltip12 {
+                top: -10px;
+            }
+        }
+
+        @media (max-width: 505px) {
+            .title {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 435px) {
+            .title {
+                font-size: 26px;
+            }
+        }
+
+        #notAvailable {
+            display: none;
+            font-size: 24px;
+            color: red;
+            margin-top: 45vh;
+            text-align: center;
+        }
+    </style>
+    <div id="notAvailable">Nicht verfügbar</div> <!-- Nachricht über die Nichtverfügbarkeit -->
+
+    <div class="container" style="padding: 20px !important">
+        <h2 class="title">Haben Sie nicht gefunden, wonach Sie suchen?</h2>
+        <!--<p class="description">Haben Sie nicht gefunden, wonach Sie suchen?</p>-->
+        <form id="dataForm" class="dataForm">
+            <!-- Formularfelder -->
+            <div class="form-group">
+                <label for="full_name" class="full_name">Wie dürfen wir Sie ansprechen?</label>
+                <input type="text" id="full_name" name="name" class="form-control" required maxlength="255"
+                    placeholder="Geben Sie Ihren Namen ein">
+            </div>
+            <div class="form-group">
+                <label for="phone_number" class="full_name">Telefonnummer</label>
+                <input type="tel" id="phone_number" name="phone_number" class="form-control" required maxlength="20"
+                    pattern="[0-9+\s-()]*" placeholder="+998 000-00-00">
+            </div>
+            <div class="form-group">
+                <label for="email" class="full_name">E-Mail-Adresse</label>
+                <input type="email" id="email" name="email" class="form-control" required maxlength="255"
+                    placeholder="Geben Sie Ihre E-Mail-Adresse ein">
+            </div>
+            <div class="form-group">
+                <label for="city" class="full_name">Stadt</label>
+                <input type="text" id="city" name="city" class="form-control" required maxlength="255"
+                    placeholder="Geben Sie Ihre Stadt ein">
+            </div>
+            <div class="form-group">
+                <label for="birth_date" class="full_name">Geburtsdatum</label>
+                <input type="date" id="birth_date" name="birth_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="test_id" class="full_name">Wählen Sie einen Test:</label>
+                <select id="test_id" name="test_id" class="form-control" required></select>
+            </div>
+
+            <div class="btn btn-primary mt-3" disabled>
+                <button type="submit" id="submitButton" class="btn2" alt="limit erreicht">Absenden</button>
+                <div id="tooltip12" class="tooltip12">Kann nicht gesendet werden</div>
+            </div>
+        </form>
+        <div id="loadingStatus" class="alert alert-info mt-3" style="display: none;">Daten werden geladen...</div>
+    </div>
+
+    <script>
+        // Formular absenden
+        document.addEventListener('DOMContentLoaded', function () {
+            // Funktion zur Überprüfung der Limits
+            async function checkLimits() {
+                try {
+                    const response = await fetch('https://goethe.uicgroup.tech/api/admin/check_limits', {
+                        headers: {
+                            'Accept-Language': 'de'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Fehler beim Überprüfen der Limits');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Prüfen, ob Daten vorhanden sind und das Limit nicht erreicht wurde
+                    if (data && data.limit && !data.isLimitReached) {
+                        document.getElementById('submitButton').disabled = false; // Schaltfläche aktivieren
+                        document.querySelector('.tooltip12').style.display = 'none'; // Tooltip ausblenden
+                        document.querySelector('.container').style.display = 'block'; // Formularcontainer anzeigen
+                        document.getElementById('notAvailable').style.display = 'none'; // Nachricht "Nicht verfügbar" ausblenden
+                    } else {
+                        document.getElementById('submitButton').disabled = true; // Schaltfläche deaktivieren
+                        document.querySelector('.container').style.display = 'none'; // Formularcontainer ausblenden
+                        document.getElementById('notAvailable').style.display = 'block'; // Nachricht "Nicht verfügbar" anzeigen
+                    }
+                } catch (error) {
+                    console.error('Ein Fehler ist aufgetreten:', error);
+                    // Nachricht "Nicht verfügbar" anzeigen und Formular im Fehlerfall ausblenden
+                    document.querySelector('.container').style.display = 'none';
+                    document.getElementById('notAvailable').style.display = 'block';
+                }
+            }
+
+            // Formular absenden
+            document.getElementById('dataForm').addEventListener('submit', async function (event) {
+                event.preventDefault();
+
+                const submitButton = document.getElementById('submitButton');
+                const successMessage = document.getElementById('successMessage');
+
+                try {
+                    submitButton.disabled = true;
+
+                    const formData = new FormData(this);
+
+                    // Daten vor dem Senden vorbereiten
+                    const data = {
+                        fullName: formData.get('name'),
+                        phoneNumber: formData.get('phone_number'),
+                        email: formData.get('email'),
+                        city: formData.get('city'),
+                        birthDate: formData.get('birth_date'),
+                        test_id: document.getElementById('test_id').value // Test ID hinzufügen
+                    };
+
+                    // Daten an den Server senden
+                    const response = await fetch('https://goethe.uicgroup.tech/api/admin/submissions', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Accept-Language': 'de'
+                        },
+                        body: JSON.stringify(data) // Daten im JSON-Format senden
+                    });
+
+                    const responseData = await response.json();
+
+                    // Verschiedene Statuscodes behandeln
+                    switch (response.status) {
+                        case 404:
+                            alert(responseData.message || 'Test wurde nicht gefunden');
+                            break;
+
+                        case 403:
+                            alert(responseData.message || 'Anmeldung nicht möglich');
+                            break;
+
+                        case 422:
+                            if (responseData.errors && responseData.errors.phone_number) {
+                                alert(responseData.errors.phone_number[0]);
+                            } else if (responseData.message) {
+                                alert(responseData.message);
+                            } else {
+                                alert('Bitte überprüfen Sie Ihre Eingaben');
+                            }
+                            break;
+
+                        case 500:
+                            alert(responseData.message || 'Ein Serverfehler ist aufgetreten');
+                            break;
+
+                        case 201:
+                            alert(responseData.message || 'Ihre Anmeldung wurde erfolgreich gespeichert');
+                            
+                            // Formular zurücksetzen
+                            this.reset();
+                            
+                            // Mavjud testlarni qayta yuklash
+                            loadAvailableTests();
+                            break;
+
+                        default:
+                            alert('Ein unerwarteter Fehler ist aufgetreten');
+                            break;
+                    }
+
+                } catch (error) {
+                    console.error('Fehler:', error);
+                    successMessage.className = 'alert alert-danger mt-3';
+                    successMessage.innerText = error.message;
+                    successMessage.style.display = 'block';
+                } finally {
+                    submitButton.disabled = false; // Schaltfläche aktivieren
+                }
+            });
+
+            checkLimits(); // Überprüfung der Limits beim Laden der Seite
+        });
+
+        // Mavjud testlarni yuklash funksiyasi
+        async function loadAvailableTests() {
+            const testSelect = document.getElementById('test_id');
+            testSelect.innerHTML = ''; // Avvalgi testlarni tozalash
+            
+            try {
+                const response = await fetch('https://goethe.uicgroup.tech/api/admin/available_tests', {
+                    headers: {
+                        'Accept-Language': 'de'
+                    }
+                });
+                const data = await response.json();
+
+                if (!data.hasAvailableTests) {
+                    // Keine verfügbaren Tests – Formular ausblenden
+                    document.querySelector('.container').style.display = 'none';
+                    document.getElementById('notAvailable').style.display = 'block';
+                    return;
+                }
+
+                // Formular anzeigen
+                document.querySelector('.container').style.display = 'block';
+                document.getElementById('notAvailable').style.display = 'none';
+
+                // Select mit verfügbaren Tests füllen
+                data.data.forEach(test => {
+                    const option = document.createElement('option');
+                    option.value = test.id;
+                    option.textContent = test.name || `Test ${test.id}`;
+                    testSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Fehler beim Laden der Tests:', error);
+                document.querySelector('.container').style.display = 'none';
+                document.getElementById('notAvailable').style.display = 'block';
+            }
+        }
+
+        // Neue Funktion: Verfügbare Tests laden und Select füllen
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAvailableTests(); // Sahifa yuklanganda testlarni yuklash
+        });
+    </script>
+
+</body>
+
+</html>

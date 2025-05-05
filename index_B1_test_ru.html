@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отправка данных</title>
+</head>
+
+<body>
+    <style>
+        .container {
+            width: 80%;
+            margin-left: 10%;
+        }
+
+        .title {
+            font-size: 40px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 700;
+            margin: 0;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 16px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 400;
+            margin: 10px 0px;
+            text-align: center;
+            color: #8C849A;
+        }
+
+        .dataForm {
+            display: flex;
+            flex-direction: column;
+            row-gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full_name {
+            font-size: 16px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 700;
+            margin: 10px 0px;
+            color: black;
+        }
+
+        .form-control {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #E7E5EA;
+            outline: none;
+            border-radius: 12px;
+        }
+
+        .btn {
+            padding: 30px 0;
+            background: #96C643;
+            border: none;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .btn2 {
+            background: white;
+            padding: 12px 50px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            margin: auto;
+        }
+
+        .tooltip12 {
+            position: absolute;
+            font-family: 'Gilroy', Arial, sans-serif;
+            background-color: rgb(219, 215, 215);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            display: none;
+            z-index: 999999;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip12 .tooltip12text {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip12:hover .tooltip12text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Custom Select Styles */
+        .multi-select-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-box {
+            border: 1px solid #E7E5EA;
+            padding: 12px 15px;
+            border-radius: 12px;
+            background-color: white;
+            cursor: pointer;
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 50px;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .select-box:hover {
+            border-color: rgb(199, 195, 195);
+        }
+
+        .select-box.open {
+            border-color: rgb(199, 195, 195);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .select-box::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            color: #666;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .select-box.open::after {
+            transform: rotate(180deg);
+        }
+
+        .selected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-right: 20px;
+        }
+
+        .selected-item {
+            background: linear-gradient(135deg, rgb(180, 180, 180) 0%, rgb(200, 200, 200) 100%);
+            color: #333;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .selected-item span {
+            margin-right: 8px;
+        }
+
+        .remove-item {
+            cursor: pointer;
+            font-size: 16px;
+            /* Increased font size for the X */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            color: #555;
+            font-weight: bold;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            line-height: 1;
+            /* Helps center the X vertically */
+        }
+
+        .remove-item:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: scale(1.1);
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .dropdown {
+            width: 100%;
+            background-color: white;
+            border: 1px solid #E7E5EA;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            height: 0;
+            overflow: hidden;
+            transition: height 0.3s ease;
+            opacity: 0;
+            margin-top: -1px;
+            /* Compensate for the border */
+            z-index: 100;
+        }
+
+        .dropdown.open {
+            height: 200px;
+            overflow-y: auto;
+            opacity: 1;
+        }
+
+        .option {
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid #E7E5EA;
+            user-select: none;
+            font-size: 16px;
+            font-family: 'Gilroy', Arial, sans-serif;
+        }
+
+        .option:last-child {
+            border-bottom: none;
+        }
+
+        .option:hover {
+            background-color: rgba(219, 215, 215, 0.3);
+        }
+
+        .option input {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #666;
+            pointer-events: none;
+        }
+
+        .option label {
+            cursor: pointer;
+            font-size: 15px;
+            color: #444;
+            flex: 1;
+            pointer-events: none;
+        }
+
+        .placeholder {
+            color: #999;
+            font-size: 15px;
+        }
+
+        @media (max-width: 850px) {
+            .title {
+                font-size: 35px;
+            }
+
+            .btn {
+                padding: 20px 0;
+                border-radius: 10px;
+            }
+
+            .btn2 {
+                padding: 10px 45px;
+                border-radius: 10px;
+                font-size: 15px;
+            }
+
+            .form-control {
+                border-radius: 10px;
+            }
+
+            .tooltip12 {
+                top: -10px;
+            }
+
+            .select-box {
+                border-radius: 10px;
+            }
+
+            .select-box.open {
+                border-radius: 10px 10px 0 0;
+            }
+
+            .dropdown {
+                border-radius: 0 0 10px 10px;
+            }
+        }
+
+        @media (max-width: 505px) {
+            .title {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 435px) {
+            .title {
+                font-size: 26px;
+            }
+        }
+
+        #notAvailable {
+            display: none;
+            font-size: 24px;
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    <div id="notAvailable">Недоступно</div> <!-- Сообщение о недоступности -->
+    <div class="container" style="padding: 20px !important">
+        <h2 class="title">Не нашли то, что искали?</h2>
+        <!-- <p class="description">Не нашли то, что искали?</p> -->
+        <form id="dataForm" class="dataForm">
+            <!-- Поля формы здесь -->
+            <div class="form-group">
+                <label for="full_name" class="full_name">Как к вам обращаться?</label>
+                <input type="text" id="full_name" name="full_name" class="form-control" required maxlength="255"
+                    placeholder="Введите ваше имя">
+            </div>
+            <div class="form-group">
+                <label for="phone_number" class="full_name">Номер телефона</label>
+                <input type="tel" id="phone_number" name="phone_number" class="form-control" required maxlength="20"
+                    pattern="[\d\s\+\-\(\)]*" placeholder="+998 000-00-00">
+            </div>
+            <div class="form-group">
+                <label for="email" class="full_name">Адрес электронной почты</label>
+                <input type="email" id="email" name="email" class="form-control" required maxlength="255"
+                    placeholder="Введите ваш адрес электронной почты">
+            </div>
+            <div class="form-group">
+                <label for="city" class="full_name">Город</label>
+                <input type="text" id="city" name="city" class="form-control" required maxlength="255"
+                    placeholder="Введите ваш город">
+            </div>
+            <div class="form-group">
+                <label for="birth_date" class="full_name">Дата рождения</label>
+                <input type="date" id="birth_date" name="birth_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="test_id" class="full_name">Выберите тест:</label>
+                <select id="test_id" name="test_id" class="form-control" required>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="module" class="full_name">Модуль</label>
+                <div class="multi-select-container">
+                    <div class="select-box">
+                        <div class="selected-items"></div>
+                        <span class="placeholder">Выберите</span>
+                    </div>
+                    <div class="dropdown">
+                        <div class="option" data-value="1">
+                            <input type="checkbox" id="module1" value="1">
+                            <label for="module1">Аудирование</label>
+                        </div>
+                        <div class="option" data-value="2">
+                            <input type="checkbox" id="module2" value="2">
+                            <label for="module2">Чтение</label>
+                        </div>
+                        <div class="option" data-value="3">
+                            <input type="checkbox" id="module3" value="3">
+                            <label for="module3">Письмо</label>
+                        </div>
+                        <div class="option" data-value="4">
+                            <input type="checkbox" id="module4" value="4">
+                            <label for="module4">Говорение</label>
+                        </div>
+                    </div>
+                    <input type="hidden" id="module" name="module[]" required>
+                </div>
+            </div>
+            <div class="btn btn-primary mt-3" disabled>
+                <button type="submit" id="submitButton" class="btn2" alt="лимит исчерпан">Отправить</button>
+                <div id="tooltip12" class="tooltip12">Невозможно отправить</div>
+            </div>
+        </form>
+        <div id="successMessage" class="alert mt-3" style="display: none;"></div>
+        <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;"></div>
+        <div id="loadingStatus" class="alert alert-info mt-3" style="display: none;">Загрузка данных...</div>
+    </div>
+    <script>
+        // Пользовательская реализация выбора
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectBox = document.querySelector('.select-box');
+            const dropdown = document.querySelector('.dropdown');
+            const selectedItems = document.querySelector('.selected-items');
+            const placeholder = document.querySelector('.placeholder');
+            const options = document.querySelectorAll('.option');
+            const hiddenInput = document.getElementById('module');
+
+            // Переключение выпадающего списка
+            selectBox.addEventListener('click', function (e) {
+                selectBox.classList.toggle('open');
+                dropdown.classList.toggle('open');
+                e.stopPropagation();
+            });
+
+            // Закрытие выпадающего списка при клике вне его
+            document.addEventListener('click', function () {
+                selectBox.classList.remove('open');
+                dropdown.classList.remove('open');
+            });
+
+            // Предотвращение закрытия выпадающего списка при клике внутри него
+            dropdown.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
+            // Сделать весь div опции кликабельным
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    updateSelectedItems();
+                });
+            });
+
+            // Обновление отображения выбранных элементов и значения скрытого поля ввода
+            function updateSelectedItems() {
+                selectedItems.innerHTML = '';
+                let hasSelectedItems = false;
+                let selectedValues = [];
+
+                options.forEach(option => {
+                    const checkbox = option.querySelector('input[type="checkbox"]');
+                    if (checkbox.checked) {
+                        hasSelectedItems = true;
+                        selectedValues.push(checkbox.value);
+
+                        const item = document.createElement('div');
+                        item.className = 'selected-item';
+
+                        const span = document.createElement('span');
+                        span.textContent = option.querySelector('label').textContent;
+
+                        const removeBtn = document.createElement('span');
+                        removeBtn.className = 'remove-item';
+                        removeBtn.innerHTML = '&times;'; // Использование символа ×
+                        removeBtn.addEventListener('click', function (e) {
+                            e.stopPropagation();
+                            checkbox.checked = false;
+                            updateSelectedItems();
+                        });
+
+                        item.appendChild(span);
+                        item.appendChild(removeBtn);
+                        selectedItems.appendChild(item);
+                    }
+                });
+
+                // Обновление значения скрытого поля ввода для отправки формы
+                hiddenInput.value = selectedValues.join(',');
+
+                // Установка валидации обязательного поля
+                if (selectedValues.length > 0) {
+                    hiddenInput.setCustomValidity('');
+                } else {
+                    hiddenInput.setCustomValidity('Пожалуйста, выберите хотя бы один вариант');
+                }
+
+                // Показать/скрыть заполнитель
+                if (hasSelectedItems) {
+                    placeholder.style.display = 'none';
+                } else {
+                    placeholder.style.display = 'inline';
+                }
+            }
+
+            // Функция для проверки лимитов
+            async function checkLimits() {
+                try {
+                    const response = await fetch('https://goethe.uicgroup.tech/api/admin/available_tests_b1', {
+                        headers: {
+                            'Accept-Language': 'ru'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (!data.hasAvailableTests) {
+                        // Если нет доступных тестов
+                        document.querySelector('.container').style.display = 'none';
+                        document.getElementById('notAvailable').style.display = 'block';
+                        return;
+                    }
+
+                    // Показать контейнер формы
+                    document.querySelector('.container').style.display = 'block';
+                    document.getElementById('notAvailable').style.display = 'none';
+
+                    // Заполнить выпадающий список тестов
+                    const testSelect = document.getElementById('test_id');
+                    testSelect.innerHTML = '';
+
+                    // Добавить только доступные тесты
+                    data.data.forEach(test => {
+                        const option = document.createElement('option');
+                        option.value = test.id;
+                        option.textContent = test.name;
+                        testSelect.appendChild(option);
+                    });
+
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    document.querySelector('.container').style.display = 'none';
+                    document.getElementById('notAvailable').style.display = 'block';
+                }
+            }
+
+            // Отправка формы
+            document.getElementById('dataForm').addEventListener('submit', async function (event) {
+                event.preventDefault();
+
+                const submitButton = document.getElementById('submitButton');
+                submitButton.disabled = true;
+
+                try {
+                    const formData = new FormData(this);
+                    let selectedModules = [];
+
+                    document.querySelectorAll('.option input[type="checkbox"]:checked').forEach(checkbox => {
+                        selectedModules.push(parseInt(checkbox.value));
+                    });
+
+                    const data = {
+                        full_name: formData.get('full_name'),
+                        phone_number: formData.get('phone_number'),
+                        email: formData.get('email'),
+                        city: formData.get('city'),
+                        birth_date: formData.get('birth_date'),
+                        test_id: formData.get('test_id'),
+                        module: JSON.stringify(selectedModules)
+                    };
+
+                    const response = await fetch('https://goethe.uicgroup.tech/api/admin/submissions_b1', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Accept-Language': 'ru'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const responseData = await response.json();
+
+                    // Сообщения для разных кодов статуса
+                    switch (response.status) {
+                        case 404:
+                            alert(responseData.message || 'Тест не найден');
+                            break;
+
+                        case 403:
+                            alert(responseData.message || 'Регистрация невозможна');
+                            break;
+
+                        case 422:
+                            if (responseData.errors && responseData.errors.phone_number) {
+                                alert(responseData.errors.phone_number[0]);
+                            } else if (responseData.message) {
+                                alert(responseData.message);
+                            } else {
+                                alert('Пожалуйста, проверьте ваши данные');
+                            }
+                            break;
+
+                        case 500:
+                            alert(responseData.message || 'Произошла ошибка на сервере');
+                            break;
+
+                        case 201:
+                            alert(responseData.message || 'Ваша заявка успешно сохранена');
+                            
+                            // Очистка формы
+                            this.reset();
+                            
+                            // Очистка модулей
+                            document.querySelectorAll('.option input[type="checkbox"]').forEach(checkbox => {
+                                checkbox.checked = false;
+                            });
+                            document.querySelector('.selected-items').innerHTML = '';
+                            document.querySelector('.placeholder').style.display = 'inline';
+                            document.getElementById('module').value = '';
+                            break;
+
+                        default:
+                            alert('Произошла непредвиденная ошибка');
+                            break;
+                    }
+
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert(error.message || 'Произошла непредвиденная ошибка');
+                } finally {
+                    submitButton.disabled = false;
+                }
+            });
+
+            checkLimits(); // Проверка лимитов при загрузке страницы
+        });
+    </script>
+
+</body>
+
+</html>
