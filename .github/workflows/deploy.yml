@@ -1,0 +1,22 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Kodni yuklash
+        uses: actions/checkout@v3
+
+      - name: Rsync exclude list
+        run: |
+          git ls-files --others --ignored --exclude-standard > .rsync-exclude
+
+      - name: Rsync orqali frontendni serverga yuborish
+        run: |
+          sudo rsync -avz --delete --exclude-from='.rsync-exclude' ./ /var/www/goethe-frontend/
